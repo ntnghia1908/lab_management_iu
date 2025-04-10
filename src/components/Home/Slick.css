@@ -1,0 +1,55 @@
+/* Ẩn mũi tên mặc định của slick */
+.slick-prev:before,
+.slick-next:before {
+    display: none;
+}
+
+/* Tùy chỉnh mũi tên trước (prev) */
+.slick-prev,
+.slick-next {
+    width: 40px !important;
+    height: 40px !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border-radius: 50%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, transform 0.3s ease;
+    z-index: 1 !important;
+}
+
+/* Thêm hiệu ứng khi hover */
+.slick-prev:hover,
+.slick-next:hover {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Thêm icon SVG vào mũi tên trước */
+.slick-prev::after,
+.slick-next::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Thêm icon cho slick-prev */
+.slick-prev::after {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>');
+}
+
+/* Thêm icon cho slick-next */
+.slick-next::after {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>');
+}
+
+/* Điều chỉnh vị trí của mũi tên */
+.slick-prev {
+    left: 10px;
+}
+
+.slick-next {
+    right: 10px;
+}
