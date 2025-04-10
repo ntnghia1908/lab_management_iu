@@ -1,5 +1,6 @@
-import React, {useContext} from "react";
-import { Box} from "@mui/material";
+import * as React from "react";
+import { useContext } from "react";
+import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { SidebarContext } from "../../context/SidebarContext";
 import Sidebar from "./Sidebar.tsx";

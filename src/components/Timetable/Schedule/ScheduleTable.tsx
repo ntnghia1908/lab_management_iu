@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import * as React from 'react';
+import { useEffect, useRef } from 'react';
 import { Box, Typography, CircularProgress, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import './schedule.css'; // Retain if specific styles are necessary
 import {RootState, useAppDispatch} from '../../../state/store';
 import { useSelector } from 'react-redux';
 import { fetchLessonTimes } from '../../../state/LessonTime/Reducer';

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+import * as SockJS from "sockjs-client";
 import {
     Badge,
     Card,

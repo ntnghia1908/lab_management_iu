@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useMemo } from "react";
+import * as React from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Bar } from "react-chartjs-2";
+import { Chart } from "react-chartjs-2";
 import {
     TextField,
     Box,
@@ -16,7 +17,6 @@ import { format, isValid } from "date-fns";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { RootState, useAppDispatch } from "../../../state/store.ts";
 import { getUsageTimeUsers } from "../../../state/Dashboard/Reducer.ts";
-
 
 // Chart.js registration (ensure Chart.js is properly registered)
 import {
@@ -69,7 +69,12 @@ const BarChart: React.FC = () => {
     const dispatch = useAppDispatch();
     const { usageTimeUsers, isLoading, error, totalElements } = useSelector(
         (state: RootState) => state.usage
-    );
+    ) as {
+        usageTimeUsers: { username: string; totalUsageTime: number }[];
+        isLoading: boolean;
+        error: string | null;
+        totalElements: number;
+    };
 
     const [filters, setFilters] = useState<FilterParams>({
         date: "",
@@ -115,13 +120,13 @@ const BarChart: React.FC = () => {
                     label: t('dashboard.barchart.label1'),
                     data: usageTimeUsers.map((user) => Math.floor(user.totalUsageTime / 60)),
                     backgroundColor: CHART_BACKGROUND_COLOR,
-                    type: "bar", // Ensure type is "bar"
+                    type: 'bar' as const,
                 },
                 {
                     label: t('dashboard.barchart.label2'),
                     data: usageTimeUsers.map(() => MAX_USAGE_TIME),
                     backgroundColor: MAX_USAGE_TIME_COLOR,
-                    type: "line",
+                    type: 'line' as const,
                     borderColor: MAX_USAGE_TIME_BORDER_COLOR,
                     borderWidth: 2,
                     fill: false,
@@ -129,7 +134,7 @@ const BarChart: React.FC = () => {
                 },
             ],
         };
-    }, [usageTimeUsers]);
+    }, [usageTimeUsers, t]);
 
     // Memoize chart options
     const chartOptions = useMemo(() => {
@@ -238,7 +243,7 @@ const BarChart: React.FC = () => {
 
             {/* Bar Chart */}
             {!isLoading && shouldDisplayData && (
-                <Bar data={barChartData} options={chartOptions} />
+                <Chart type="bar" data={barChartData} options={chartOptions} />
             )}
 
             {/* Pagination */}
