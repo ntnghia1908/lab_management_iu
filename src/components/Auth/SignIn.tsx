@@ -146,14 +146,18 @@ export default function SignIn() {
                 if (loginResponse.tfaEnabled) {
                     dispatch(clearStatus());
                     navigate('/account/verify', { state: { username: formData.username } });
-
                 } else {
                     dispatch(clearStatus());
                     await dispatch(getUser()).unwrap();
                     showAlert("Đăng nhập thành công!", "success");
                     setTimeout(() => {
-                        navigate('/');
-                    }, 2000); // Chờ 2 giây trước khi chuyển trang
+                        // Redirect based on user role
+                        if (loginResponse.role === "ADMIN" || loginResponse.role === "OWNER" || loginResponse.role === "CO_OWNER") {
+                            navigate('/admin/hcmiu');
+                        } else {
+                            navigate('/');
+                        }
+                    }, 2000); // Wait 2 seconds before redirecting
                 }
             } catch (error) {
                 console.error('Failed to login:', error);
