@@ -27,7 +27,6 @@ import SidebarAdmin from "../Dashboard/SidebarAdmin.tsx";
 import {SidebarContext} from "../../context/SidebarContext.tsx";
 import {useTranslation} from "react-i18next";
 import {styled} from "@mui/material/styles";
-import NotificationIcon from "./NotificationIcon.tsx";
 import Stack from "@mui/material/Stack";
 
 // eslint-disable-next-line no-empty-pattern
@@ -288,9 +287,6 @@ const Navbar: React.FC = () => {
 
                     {user?.enabled ? (
                         <Stack direction="row" alignItems="center" spacing={2}>
-                            {/* Icon thông báo */}
-                            <NotificationIcon />
-
                             {/* Avatar người dùng */}
                             <IconButton
                                 onClick={handleAvatarClick}

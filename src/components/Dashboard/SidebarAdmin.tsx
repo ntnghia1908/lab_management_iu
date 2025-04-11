@@ -15,7 +15,6 @@ import {
     ManageSearch,
     Dashboard,
     AccountBalance,
-    Notifications,
     ImportExport,
     People,
     Settings,
@@ -76,7 +75,6 @@ const SidebarAdmin: FC= ( ) => {
             ]
         },
         {text: t('sidebar.booking'), icon: <ManageSearch/>, link: 'book'},
-        {text: t('sidebar.notification'), icon: <Notifications/>, link: 'notification'},
         {text: t('sidebar.cancel'), icon: <SearchOff/>, link: 'timetable/cancel'},
         {text: t('sidebar.import'), icon: <ImportExport/>, link: 'timetable/import'},
         {text: t('sidebar.user_management'), icon: <People/>, link: 'user-management'},

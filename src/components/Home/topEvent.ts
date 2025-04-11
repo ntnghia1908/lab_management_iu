@@ -1,4 +1,4 @@
-import slide1 from "@images/slide1.jpg";
+import slide1 from "../../assets/images/slide1.jpg";
 
 export const topEvents = [
     {

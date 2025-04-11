@@ -14,7 +14,6 @@ import {
 import {
     ManageSearch,
     Dashboard,
-    Notifications,
     Settings,
     ExitToApp,
     Menu,
@@ -47,7 +46,6 @@ const Sidebar: FC= ( ) => {
         {text: t('sidebar.dashboard'), icon: <Dashboard/>, link: ''},
         {text: t('sidebar.view_timetable'), icon: <DateRange/>, link: 'by-week'},
         {text: t('sidebar.booking'), icon: <ManageSearch/>, link: 'book'},
-        {text: t('sidebar.notification'), icon: <Notifications/>, link: 'notification'},
         {text: t('sidebar.setting'), icon: <Settings/>, link: 'setting'},
     ];
     const handleLogout = async () => {
