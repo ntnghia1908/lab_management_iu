@@ -41,6 +41,10 @@ const router = createBrowserRouter([
                 element: <ScheduleTable/>,
             },
             {
+                path: 'signin',
+                element: <SignIn/>,
+            },
+            {
                 path: 'account/signin',
                 element: <SignIn/>,
             },

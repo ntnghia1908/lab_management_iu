@@ -35,9 +35,18 @@ export const loginUser = createAsyncThunk<AuthResponseData, LoginRequestData, { 
     async (reqData, {rejectWithValue}) => {
         try {
             const {data} = await api.post<AuthResponseData>(`${API_URL}/auth/login`, reqData);
-            if (data.access_token) localStorage.setItem('accessToken', data.access_token);
+            
+            if (data.access_token) {
+                localStorage.setItem('accessToken', data.access_token);
+                // Set Authorization header for future requests
+                api.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
+                
+                // Store refresh token if available
+                if (data.refresh_token) {
+                    localStorage.setItem('refreshToken', data.refresh_token);
+                }
+            }
 
-            console.log(data)
             return data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -131,7 +140,14 @@ export const logout = createAsyncThunk(
     async (_, {rejectWithValue}) => {
         try {
             await api.get(`${API_URL}/auth/logout`);
-            //localStorage.clear();
+            
+            // Clear tokens from localStorage
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+            
+            // Clear authorization headers
+            api.defaults.headers.common['Authorization'] = '';
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response && error.response.data) {
@@ -150,7 +166,14 @@ export const verifyOtp = createAsyncThunk(
     async (request:VerificationCodeRequest, { rejectWithValue }) => {
         try {
             const { data } = await api.post<AuthResponseData>(`${API_URL}/auth/verify-qr`, request);
-            if (data.access_token) localStorage.setItem('accessToken', data.access_token);
+            if (data.access_token) {
+                localStorage.setItem('accessToken', data.access_token);
+                
+                // Store refresh token if available
+                if (data.refresh_token) {
+                    localStorage.setItem('refreshToken', data.refresh_token);
+                }
+            }
             return data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -210,7 +233,14 @@ export const verifyTFAEmail = createAsyncThunk(
     async (request:VerificationCodeRequest, { rejectWithValue }) => {
         try {
             const { data } = await api.post(`${API_URL}/auth/verify-otp`,request);
-            if (data.access_token) localStorage.setItem('accessToken', data.access_token);
+            if (data.access_token) {
+                localStorage.setItem('accessToken', data.access_token);
+                
+                // Store refresh token if available
+                if (data.refresh_token) {
+                    localStorage.setItem('refreshToken', data.refresh_token);
+                }
+            }
 
             return data;
         } catch (error) {

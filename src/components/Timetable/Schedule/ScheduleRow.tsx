@@ -86,7 +86,31 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
                 </TableCell>
             )}
             {daysOfWeek.map((dayOfWeek) => {
+                // Get schedule items for this day/period/room
                 const scheduleItems = getScheduleItems(dayOfWeek, period, room);
+                
+                // Debug logging with improved day matching
+                if (scheduleItems.length > 0) {
+                    const uiToApiDayMap: { [key: string]: string } = {
+                        'Monday': 'MONDAY',
+                        'Tuesday': 'TUESDAY',
+                        'Wednesday': 'WEDNESDAY',
+                        'Thursday': 'THURSDAY',
+                        'Friday': 'FRIDAY',
+                        'Saturday': 'SATURDAY',
+                        'Sunday': 'SUNDAY'
+                    };
+                    
+                    console.log(`===== Day Match Debug for ${dayOfWeek} =====`);
+                    console.log(`Found ${scheduleItems.length} items for day "${dayOfWeek}", room ${room}, period ${period}`);
+                    console.log(`Expected API day format: "${uiToApiDayMap[dayOfWeek]}"`);
+                    
+                    // Log each item's day value
+                    scheduleItems.forEach((item, index) => {
+                        console.log(`Item ${index}: API day "${item.dayOfWeek}", matches UI day "${dayOfWeek}": ${item.dayOfWeek === uiToApiDayMap[dayOfWeek]}`);
+                    });
+                }
+                
                 return (
                     <ScheduleCell
                         key={`${dayOfWeek}-${room}-${period}`}

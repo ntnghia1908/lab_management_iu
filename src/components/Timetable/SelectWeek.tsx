@@ -21,13 +21,49 @@ const SelectWeek: React.FC<SelectWeekProps> = ({ onWeekChange, initialWeek }) =>
     const [weeks, setWeeks] = React.useState<Array<{ startDate: string, endDate: string }>>([]);
     const initialized = useRef(false);
 
-    // Chỉ gọi getRangeWeek khi component lần đầu được mount
+    // Always fetch the current semester's week range when component mounts
     useEffect(() => {
-        if (!initialized.current && (!weekRange?.firstWeekStart || !weekRange?.lastWeekEnd)) {
-            dispatch(getRangeWeek({semesterId:2}));
+        if (!initialized.current && !weekRange) {
+            // Use semester ID 2 as we've confirmed it has data
+            dispatch(getRangeWeek({semesterId: 2}))
+                .unwrap()
+                .then(data => {
+                    console.log("Week range fetched successfully:", data);
+                })
+                .catch(error => {
+                    console.error("Error fetching week range:", error);
+                    // If error occurs, we'll try to generate some default weeks
+                    const today = new Date();
+                    const startDate = new Date(today);
+                    startDate.setDate(today.getDate() - today.getDay()); // Start from current week's Sunday
+                    
+                    const lastDate = new Date(startDate);
+                    lastDate.setDate(startDate.getDate() + 90); // Show 3 months of weeks
+                    
+                    // Format to dd/MM/yyyy
+                    const firstWeekStart = startDate.toLocaleDateString('en-GB', {
+                        day: '2-digit', month: '2-digit', year: 'numeric'
+                    }).replace(/\//g, '/');
+                    
+                    const lastWeekEnd = lastDate.toLocaleDateString('en-GB', {
+                        day: '2-digit', month: '2-digit', year: 'numeric'
+                    }).replace(/\//g, '/');
+                    
+                    // Calculate weeks and set them
+                    const calculatedWeeks = calculateWeeks(firstWeekStart, lastWeekEnd);
+                    setWeeks(calculatedWeeks);
+                    
+                    // Select current week
+                    const currentWeek = getCurrentWeek(calculatedWeeks);
+                    if (currentWeek) {
+                        dispatch(setSelectedWeek(currentWeek));
+                        onWeekChange(currentWeek);
+                    }
+                });
+            
             initialized.current = true;
         }
-    }, [dispatch, weekRange?.firstWeekStart, weekRange?.lastWeekEnd]);
+    }, [dispatch, weekRange]);
 
     // Tính toán và thiết lập danh sách tuần khi weekRange thay đổi
     useEffect(() => {
@@ -70,12 +106,10 @@ const SelectWeek: React.FC<SelectWeekProps> = ({ onWeekChange, initialWeek }) =>
         const selectedWeekValue = event.target.value as string;
         const [startDate, endDate] = selectedWeekValue.split('--').map(date => date.trim());
 
-        // Dispatch tuần được chọn vào Redux và gọi callback
-        if (selectedWeek?.startDate !== startDate || selectedWeek?.endDate !== endDate) {
-            const newSelectedWeek = { startDate, endDate };
-            dispatch(setSelectedWeek(newSelectedWeek));
-            onWeekChange(newSelectedWeek); // Callback để thay đổi tuần trong parent component
-        }
+        // Always update and trigger a fetch, even if it's the same week
+        const newSelectedWeek = { startDate, endDate };
+        dispatch(setSelectedWeek(newSelectedWeek));
+        onWeekChange(newSelectedWeek); // Always call callback
     };
 
     // Chuyển selectedWeek thành chuỗi dạng "startDate -- endDate" để khớp với MenuItem value

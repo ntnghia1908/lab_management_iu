@@ -21,19 +21,29 @@ const App: React.FC = () => {
     const location = useLocation();
 
     useUserActivityCheck();
-    const storedAccessToken = localStorage.getItem('accessToken');
-    // useEffect(() => {
-    //     console.log("🔌 Connecting WebSocket...");
-    //     connectWebSocket();
-    // }, []);
+    
+    // Fetch user data on initial load if token exists
     useEffect(() => {
+        // Set default auth header if token exists
+        const storedAccessToken = localStorage.getItem('accessToken');
+        
         if (storedAccessToken) {
-            console.log("Access token from localStorage: ", storedAccessToken);
-            dispatch(getUser());
+            // Apply the token to axios default headers
+            import("axios").then(axios => {
+                axios.default.defaults.headers.common['Authorization'] = `Bearer ${storedAccessToken}`;
+            });
+            
+            // Get user profile
+            dispatch(getUser())
+                .unwrap()
+                .catch(error => {
+                    console.error("Error fetching user data:", error);
+                    // Don't remove token here as the token refresh interceptor will handle it
+                });
         } else {
             console.log("No access_token found in localStorage");
         }
-    }, [dispatch, storedAccessToken]);
+    }, [dispatch]);
 
     const {isDarkMode, showCustomTheme} = useContext(ThemeContext);
     const mode = isDarkMode ? 'dark' : 'light';
